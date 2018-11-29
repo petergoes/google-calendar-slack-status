@@ -30,16 +30,18 @@ app.post('/', (req, res, next) => {
       num_minutes: end.diff(start, 'minutes')
     });
     status = status.replace(dndToken, '');
+
+    // set status
+    slack.users.profile.set({
+      token: process.env.SLACK_TOKEN,
+      profile: JSON.stringify({
+        "status_emoji": ":no_bell:"
+        "status_text": `${status} from ${start.format('h:mm')} to ${end.format('h:mm a')} ${process.env.TIME_ZONE}`,
+        "status_expiration": req.body.end
+      })
+    });
   }
-  // set status
-  slack.users.profile.set({
-    token: process.env.SLACK_TOKEN,
-    profile: JSON.stringify({
-      "status_emoji": ":no_bell:"
-      "status_text": `${status} from ${start.format('h:mm')} to ${end.format('h:mm a')} ${process.env.TIME_ZONE}`,
-      "status_expiration": req.body.end
-    })
-  });
+  
   res.status(200);
   res.send('🤘');
 });

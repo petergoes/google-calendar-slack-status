@@ -18,13 +18,13 @@ app.post('/', (req, res, next) => {
   if (!req.body.token || req.body.token !== process.env.SECRET_TOKEN) next();
   // grab status and clean it up
   let status = req.body.title;
-  const dndToken = ' [DND]';
+  const dndToken = /(\s)?\[dnd\]/i;
   // parse event start/stop time
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
   // check for DND
-  if (status.includes(dndToken)) {
+  if (dndToken.test(status)) {
     slack.dnd.setSnooze({
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
@@ -60,14 +60,14 @@ app.get('/', (req, res, next) => {
       </head>
       <body>
         <h1>Your Heroku server is running!</h1>
-        <p>You'll need the following information for your IFTTT recipe:</p>
+        <!--<p>You'll need the following information for your IFTTT recipe:</p>
         <h3>Body</h3>
 <pre>{
   "title":"<<<{{Title}}>>>",
   "start":"{{Starts}}",
   "end":"{{Ends}}",
   "token": "${process.env.SECRET_TOKEN}"
-}</pre>
+}</pre>-->
       </body>
     </html>
   `);

@@ -35,7 +35,7 @@ app.post('/', (req, res, next) => {
     status = status.replace(dndToken, '');
   }
   
-  const endUtc = moment.unix(req.body.end).utc()
+  const endUtc = new Date(req.body.end).getTime()
   slack.users.profile.set({
     token: process.env.SLACK_TOKEN,
     profile: JSON.stringify({

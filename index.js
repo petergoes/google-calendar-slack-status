@@ -39,8 +39,8 @@ app.post('/', (req, res, next) => {
     token: process.env.SLACK_TOKEN,
     profile: JSON.stringify({
       "status_emoji": dnd ? ":no_bell:" :  ":male-technologist:",
-      "status_text": status,
-      "status_expiration": end
+      "status_text": `${status} ${end}`,
+      // "status_expiration": end
     })
   });
   

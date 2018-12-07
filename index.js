@@ -35,14 +35,16 @@ app.post('/', (req, res, next) => {
     status = status.replace(dndToken, '');
   }
   
+  const endUtc = moment.unix(req.body.end).utc()
   slack.users.profile.set({
     token: process.env.SLACK_TOKEN,
     profile: JSON.stringify({
       "status_emoji": dnd ? ":no_bell:" : ":male-technologist:",
       "status_text": status,
-      "status_expiration": req.body.end
+      "status_expiration": `${moment(endUtc).unix()}`
     })
   });
+
   res.status(200);
 });
 

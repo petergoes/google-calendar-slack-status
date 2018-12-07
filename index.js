@@ -33,7 +33,7 @@ app.post('/', (req, res, next) => {
       num_minutes: end.diff(start, 'minutes')
     });
     // status = status.replace(dndToken, '');
-    status = response.snooze_endtime
+    status = JSON.stringify(response)
   }
   
   slack.users.profile.set({

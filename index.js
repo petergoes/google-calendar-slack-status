@@ -33,7 +33,7 @@ app.post('/', (req, res, next) => {
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
     });
-    status = JSON.stringify(req.body);//status.replace(dndToken, '');
+    status = status.replace(dndToken, '');
   }
   
   slack.users.profile.set({

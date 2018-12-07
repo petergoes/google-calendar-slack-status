@@ -28,12 +28,11 @@ app.post('/', (req, res, next) => {
   
   // check for DND
   if (dnd) {
-    const response = slack.dnd.setSnooze({
+    slack.dnd.setSnooze({
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
     });
-    // status = status.replace(dndToken, '');
-    status = JSON.stringify(response)
+    status = status.replace(dndToken, '');
   }
   
   slack.users.profile.set({

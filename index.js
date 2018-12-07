@@ -23,24 +23,26 @@ app.post('/', (req, res, next) => {
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
+  let dnd = dndToken.test(status)
+  
   // check for DND
-  if (dndToken.test(status)) {
+  if (dnd) {
     slack.dnd.setSnooze({
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
     });
     status = status.replace(dndToken, '');
-
     // set status
-    slack.users.profile.set({
-      token: process.env.SLACK_TOKEN,
-      profile: JSON.stringify({
-        "status_emoji": ":no_bell:",
-        "status_text": `${status} from ${start.format('h:mm')} to ${end.format('h:mm a')} ${process.env.TIME_ZONE}`,
-        "status_expiration": end.diff(start)
-      })
-    });
   }
+  
+  slack.users.profile.set({
+    token: process.env.SLACK_TOKEN,
+    profile: JSON.stringify({
+      "status_emoji": dnd ? ":no_bell:" :  ":male-technologist:",
+      "status_text": status,
+      "status_expiration": end
+    })
+  });
   
   res.status(200);
   res.send('🤘');

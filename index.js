@@ -41,7 +41,7 @@ app.post('/', (req, res, next) => {
     profile: JSON.stringify({
       "status_emoji": dnd ? ":no_bell:" : ":male-technologist:",
       "status_text": status,
-      "status_expiration": endUnix
+      "status_expiration": endUnix - (60 * 60)
     })
   });
 

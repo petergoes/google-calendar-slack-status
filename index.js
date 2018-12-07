@@ -23,7 +23,7 @@ app.post('/', (req, res, next) => {
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
-  const endUnix = moment(req.body.end, dateFormat).unix()
+  const endUnix = moment(req.body.end, dateFormat).utc().unix()
   let dnd = dndToken.test(status)
   let dndEndTime;
 

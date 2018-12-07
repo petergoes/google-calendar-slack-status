@@ -23,6 +23,7 @@ app.post('/', (req, res, next) => {
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
+  const endUnix = moment(req.body.end, 'X')
   let dnd = dndToken.test(status)
   let dndEndTime;
 
@@ -35,13 +36,12 @@ app.post('/', (req, res, next) => {
     status = status.replace(dndToken, '');
   }
   
-  const endUtc = new Date(req.body.end).getTime()
   slack.users.profile.set({
     token: process.env.SLACK_TOKEN,
     profile: JSON.stringify({
       "status_emoji": dnd ? ":no_bell:" : ":male-technologist:",
-      "status_text": `${status} - endUtc ${endUtc}`,
-      "status_expiration": `${moment(endUtc).unix()}`
+      "status_text": `${status} - endUtc ${endUnix}`,
+      "status_expiration": `${endUnix}`
     })
   });
 

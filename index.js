@@ -24,15 +24,16 @@ app.post('/', (req, res, next) => {
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
   let dnd = dndToken.test(status)
+  let dndEndTime;
   
   // check for DND
   if (dnd) {
-    slack.dnd.setSnooze({
+    const response = slack.dnd.setSnooze({
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
     });
-    status = status.replace(dndToken, '');
-    // set status
+    // status = status.replace(dndToken, '');
+    status = response.snooze_endtime
   }
   
   slack.users.profile.set({
@@ -40,7 +41,7 @@ app.post('/', (req, res, next) => {
     profile: JSON.stringify({
       "status_emoji": dnd ? ":no_bell:" :  ":male-technologist:",
       "status_text": status,
-      "status_expiration": end.unix()
+      "status_expiration": end.unix().utc()
     })
   });
   

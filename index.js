@@ -23,7 +23,7 @@ app.post('/', (req, res, next) => {
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
   const end = moment(req.body.end, dateFormat);
-  const endUnix = moment(req.body.end, 'x')
+  const endUnix = moment(req.body.end).unix()
   let dnd = dndToken.test(status)
   let dndEndTime;
 
@@ -33,7 +33,7 @@ app.post('/', (req, res, next) => {
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
     });
-    status = status.replace(dndToken, '');
+    status = JSON.stringify(req.body);//status.replace(dndToken, '');
   }
   
   slack.users.profile.set({
